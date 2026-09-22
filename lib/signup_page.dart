@@ -1,26 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:nutriguardapp/login_page.dart';
 
-void main() {
-  runApp(const signup_page());
-}
 
-class signup_page extends StatelessWidget {
-  const signup_page({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Create Account',
-      theme: ThemeData(
-        scaffoldBackgroundColor: const Color(0xFFF7F8FA),
-        primarySwatch: Colors.blue,
-      ),
-      home: const CreateAccountScreen(),
-    );
-  }
-}
 
 class CreateAccountScreen extends StatefulWidget {
   const CreateAccountScreen({super.key});
@@ -28,7 +10,7 @@ class CreateAccountScreen extends StatefulWidget {
   @override
   State<CreateAccountScreen> createState() => _CreateAccountScreenState();
 }
-
+String baseurl="http://192.168.1.4:5000";
 class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final _formKey = GlobalKey<FormState>();
 
@@ -39,6 +21,39 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
 
+final Dio dio=Dio();
+Future<void> registerUser() async {
+    try {
+      final response = await dio.post(
+        '$baseurl/register',
+        data: {
+          'name': _fullNameController.text,
+          'email': _emailController.text,
+          'password': _passwordController.text,
+        },
+      );
+
+      print(response.data);
+      if (response.statusCode==200||response.statusCode==201) {
+ ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Registration successful'),
+        ),
+      );
+        Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+      }
+
+     
+    } catch (e) {
+      print(e);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Registration failed'),
+        ),
+      );
+    }
+}
   // State Variables
   bool _isTermsAccepted = false;
   bool _obscurePassword = true;
@@ -52,7 +67,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     _confirmPasswordController.dispose();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,7 +76,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black87, size: 20),
           onPressed: () {
-            Navigator.maybePop(context);
+            Navigator.pop(context);
           },
         ),
       ),
@@ -234,10 +248,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             );
                             return;
                           }
-                          else 
-                          {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) =>LoginScreen() ,));
-                          }
+                          
                           // Handle Registration
                         }
                       },
