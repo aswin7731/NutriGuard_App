@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:nutriguardapp/changepassword.dart';
 import 'package:nutriguardapp/login_page.dart';
+import 'package:nutriguardapp/privacy_security_screen.dart';
 
 class AppSettingsScreen extends StatefulWidget {
   const AppSettingsScreen({super.key});
@@ -124,9 +126,14 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
             const Text("Account & Security", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black54)),
             const SizedBox(height: 12),
             _buildSettingsCard([
-              _buildNavTile(icon: Icons.lock_outline, title: "Change Password", onTap: () {}),
+              _buildNavTile(icon: Icons.lock_outline, title: "Change Password", onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ChangePasswordScreen()));
+              }),
               const Divider(height: 1, indent: 50, color: Color(0xFFF0F9FF)),
-              _buildNavTile(icon: Icons.privacy_tip_outlined, title: "Privacy & Security", onTap: () {}),
+              _buildNavTile(icon: Icons.privacy_tip_outlined, title: "Privacy & Security", onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => PrivacySecurityScreen()));
+
+              }),
             ]),
 
             const SizedBox(height: 24),
