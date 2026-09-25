@@ -24,9 +24,9 @@ class _LoginScreenState extends State<LoginScreen> {
     Future<void> loginUser() async {
       try {
         final response = await dio.post(
-          '$baseurl/register',
+          '$baseurl/login',
           data: {
-            'name': _emailController.text,
+            'email': _emailController.text,
             'password': _passwordController.text,
           },
         );

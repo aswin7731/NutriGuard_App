@@ -2,15 +2,15 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:nutriguardapp/login_page.dart';
 
-
-
 class CreateAccountScreen extends StatefulWidget {
   const CreateAccountScreen({super.key});
 
   @override
   State<CreateAccountScreen> createState() => _CreateAccountScreenState();
 }
-String baseurl="http://192.168.1.4:5000";
+
+String baseurl = "http://192.168.1.58:5000";
+
 class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final _formKey = GlobalKey<FormState>();
 
@@ -21,8 +21,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
 
-final Dio dio=Dio();
-Future<void> registerUser() async {
+  final Dio dio = Dio();
+  Future<void> registerUser() async {
     try {
       final response = await dio.post(
         '$baseurl/register',
@@ -34,26 +34,24 @@ Future<void> registerUser() async {
       );
 
       print(response.data);
-      if (response.statusCode==200||response.statusCode==201) {
- ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Registration successful'),
-        ),
-      );
-        Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Registration successful')),
+        );
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => LoginScreen()),
+        );
       }
-
-     
     } catch (e) {
       print(e);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Registration failed'),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Registration failed')));
     }
-}
+  }
+
   // State Variables
   bool _isTermsAccepted = false;
   bool _obscurePassword = true;
@@ -67,6 +65,7 @@ Future<void> registerUser() async {
     _confirmPasswordController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,7 +73,11 @@ Future<void> registerUser() async {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black87, size: 20),
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            color: Colors.black87,
+            size: 20,
+          ),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -83,7 +86,10 @@ Future<void> registerUser() async {
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 10.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24.0,
+              vertical: 10.0,
+            ),
             child: Form(
               key: _formKey,
               child: Column(
@@ -102,10 +108,7 @@ Future<void> registerUser() async {
                   const SizedBox(height: 6),
                   const Text(
                     'Start Your Health Guard Today',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.black54,
-                    ),
+                    style: TextStyle(fontSize: 13, color: Colors.black54),
                   ),
                   const SizedBox(height: 28),
 
@@ -195,7 +198,10 @@ Future<void> registerUser() async {
                           children: const [
                             Text(
                               'I agree to the ',
-                              style: TextStyle(fontSize: 12, color: Colors.black87),
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.black87,
+                              ),
                             ),
                             Text(
                               'Terms & Conditions',
@@ -207,7 +213,10 @@ Future<void> registerUser() async {
                             ),
                             Text(
                               ' and ',
-                              style: TextStyle(fontSize: 12, color: Colors.black87),
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.black87,
+                              ),
                             ),
                             Text(
                               'Privacy Policy',
@@ -238,6 +247,7 @@ Future<void> registerUser() async {
                       ),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
+                          registerUser();
                           if (!_isTermsAccepted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
@@ -248,7 +258,7 @@ Future<void> registerUser() async {
                             );
                             return;
                           }
-                          
+
                           // Handle Registration
                         }
                       },
@@ -267,10 +277,7 @@ Future<void> registerUser() async {
                   // Divider Text
                   const Text(
                     'Or continue with',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.black45,
-                    ),
+                    style: TextStyle(fontSize: 12, color: Colors.black45),
                   ),
                   const SizedBox(height: 20),
 
@@ -334,8 +341,10 @@ Future<void> registerUser() async {
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: const TextStyle(color: Colors.black38, fontSize: 14),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 16,
+        ),
         fillColor: Colors.white,
         filled: true,
         suffixIcon: suffixIcon,

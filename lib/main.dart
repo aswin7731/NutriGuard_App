@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:nutriguardapp/forgetpassword.dart';
 import 'package:nutriguardapp/splashscreen.dart';
 
 
