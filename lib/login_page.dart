@@ -12,6 +12,8 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
+int? userId;
+
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
 
@@ -30,17 +32,28 @@ class _LoginScreenState extends State<LoginScreen> {
             'password': _passwordController.text,
           },
         );
-
-        print(response.data);
+        userId = response.data['login_id'];
+        bool isCompleted = response.data['is_profile_completed'];
+        print(isCompleted);
+        print(userId);
+        print("#####################,${response.data}");
         if (response.statusCode == 200 || response.statusCode == 201) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Registration successful')),
           );
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => HomeDashboard()),
-            (route) => false,
-          );
+          if (!isCompleted) {
+            //direct user to fillup into health screenR
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => HealthProfileScreen()),
+            );
+          } else {
+            //when the user already completed the page so go into the home page
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const HomeDashboard()),
+            );
+          }
         }
       } catch (e) {
         print(e);

@@ -1,5 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:nutriguardapp/homepage.dart';
+import 'package:nutriguardapp/login_page.dart';
+import 'package:nutriguardapp/signup_page.dart';
 
 class HealthProfileScreen extends StatefulWidget {
   const HealthProfileScreen({super.key});
@@ -27,7 +30,37 @@ class _HealthProfileScreenState extends State<HealthProfileScreen> {
   
   final List<String> _selectedConditions = [];
   final List<String> _selectedAllergies = [];
-
+final Dio dio =Dio();
+Future<void> health_profile() async{
+  try{
+    final response = await dio.post(
+      '$baseurl/healthprofile/$userId',
+      data: {
+        'age':_ageController.text,
+        'height':_heightController.text,
+        'weight':_weightController.text,
+        'gender':_selectedGender,
+        'bmi':_calculatedBmi,
+        
+        'health_condition': _selectedConditions.join(', '),
+        'food_allergies': _selectedAllergies.join(', '),
+      },
+    );
+    print(response.data);
+    if (response.statusCode ==200|| response.statusCode ==201){
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Health Status Added Sucessfully")),
+      );
+    }
+  }
+  catch(e){
+    print(e);
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text("Health Status Addding Failed")));
+  }
+  
+}
   // --- LOGIC: BMI Calculation ---
   void _calculateBMI() {
     final double? heightCm = double.tryParse(_heightController.text);
@@ -354,11 +387,7 @@ class _HealthProfileScreenState extends State<HealthProfileScreen> {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   ),
                   onPressed: () {
-                    Navigator.push(context,MaterialPageRoute(builder: (context) => HomeDashboard()));
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Profile Saved Successfully!')),
-                    );
+                    health_profile();
                   },
                   child: const Text("Save Health Profile", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
                 ),
